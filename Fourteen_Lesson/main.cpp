@@ -1,10 +1,54 @@
 ﻿#include <iostream>
 #include <array>
+#include <vector>
 
 template <typename T, const int size_>
 class MyClass
 {
 public:
+
+	class iterator
+	{
+	public:
+		iterator() = delete;
+		iterator(T* data) : data_(data) {}
+		iterator& operator++()
+		{
+			data_++;
+			return *this;
+		}
+
+		iterator& operator++(int)
+		{
+			iterator tmp(*this);
+			data_++;
+			return tmp;
+		}
+
+		bool operator==(const iterator& obj) const
+		{
+			return this->data_ == obj.data_;
+		}
+
+		bool operator!=(const iterator& obj) const
+		{
+			return !this->operator==(obj);
+			// такой стиль применим если условия проверки
+			// содержат сложные условия или вызовы функций
+			//return this->data_ != obj.data_;
+		}
+
+		T& operator*()
+		{
+			return *data_;
+		}
+
+		
+
+	private:
+		T* data_;
+	};
+
 	int Size()
 	{
 		return _size;
@@ -29,6 +73,20 @@ public:
 	{
 		return _data[i];
 	}
+
+	iterator begin()
+	{
+		return iterator(_data);
+	}
+
+	iterator end()
+	{
+		return iterator(_data + _size);
+	}
+
+	
+	
+
 private:
 	T _data[size_];
 	const int _size{ size_ };
@@ -78,7 +136,19 @@ int main()
 		std::cout << el << ' ';
 	}
 	std::cout << std::endl;
+	//:::::::::::::::::::::::::::::::::::::::::::::
 
+	/*for (auto it = obj.Begin(); it != obj.End(); ++it)
+	{
+		std::cout << *it << ' ';
+	}
+	std::cout << std::endl;*/
+
+	for (const auto& el : obj)
+	{
+		std::cout << el << ' ';
+	}
+	std::cout << std::endl;
 
 }
 
